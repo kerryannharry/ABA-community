@@ -11,4 +11,12 @@ class ApplicationController < Sinatra::Base
     erb :home
   end
 
+  get '/signup' do
+    erb :signup
+  end
+
+  post '/signup' do
+    params.to_s
+  end 
+
 end
