@@ -19,4 +19,12 @@ class ApplicationController < Sinatra::Base
     params.to_s
   end 
 
+  get '/login'do 
+    erb :login
+  end
+
+  post 'signup' do
+    params.to_s
+  end
+
 end
