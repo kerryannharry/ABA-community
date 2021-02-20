@@ -12,15 +12,23 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/signup' do
-    erb :signup
+    erb :"registrations/signup"
   end
 
   post '/signup' do
-    params.to_s
+    binding.pry
+    user = User.create(params)
+    if user.valid?
+      session[:user_id]= user.id 
+      redirect "/users/#{user.id}"
+    else
+      # flash[:error]=user.errors
+      redirect "/signup"
+    end
   end 
 
   get '/login'do 
-    erb :login
+    erb :"sessions/login"
   end
 
   post 'signup' do
