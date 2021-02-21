@@ -31,7 +31,7 @@ class ApplicationController < Sinatra::Base
   end 
 
   get '/users/:id' do
-    binding.pry
+
   end
 
   get '/login'do 
