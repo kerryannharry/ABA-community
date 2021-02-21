@@ -38,8 +38,16 @@ class ApplicationController < Sinatra::Base
     erb :"sessions/login"
   end
 
-  post 'signup' do
-    params.to_s
+  post '/login' do
+    user = User.save(params)
+    if user.valid?
+      flash[:success]="You've successfully logged in!"
+      session[:user_id]= user.id 
+      redirect "/users/#{user.id}"
+    else
+      flash[:error]=user.errors
+      redirect "/login"
+    end
   end
 
 end
