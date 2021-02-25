@@ -14,28 +14,8 @@ class ApplicationController < Sinatra::Base
     erb :home
   end
 
-  get '/signup' do
-    redirect_if_logged_in
-    erb :"registrations/signup"
-  end
-
-  post '/signup' do
-    user = User.create(params)
-    if user.valid?
-      flash[:success]="Account sucessfully created!"
-      session[:user_id]= user.id 
-      redirect "/users/#{user.id}"
-    else
-      flash[:error]=user.errors.full_messages.to_sentence
-      redirect "/signup"
-    end
-  end 
-
-  get '/users/:id' do
-erb:"users/show"
-  end
-
   
+
 helpers do 
   def current_user
     @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
