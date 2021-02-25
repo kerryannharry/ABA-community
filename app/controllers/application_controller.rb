@@ -15,6 +15,7 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/signup' do
+    redirect_if_logged_in
     erb :"registrations/signup"
   end
 
@@ -31,23 +32,48 @@ class ApplicationController < Sinatra::Base
   end 
 
   get '/users/:id' do
-
+erb:"users/show"
   end
 
   get '/login'do 
+  redirect_if_logged_in
     erb :"sessions/login"
   end
 
   post '/login' do
-    user = User.save(params)
-    if user.valid?
+    user = User.find_by_username(params[:username])
+    if user && user.authenticate(params[:password])
       flash[:success]="You've successfully logged in!"
       session[:user_id]= user.id 
       redirect "/users/#{user.id}"
     else
-      flash[:error]=user.errors
+      flash[:error]= "Invaild login information."
       redirect "/login"
     end
   end
 
+  get '/logout' do
+  session.clear
+  redirect "/login"
+end
+helpers do 
+  def current_user
+    @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
+  end
+
+  def logged_in?
+    !!current_user
+  end
+
+  def redirect_if_not_logged_in
+    if !logged_in? 
+      redirect "/login"
+    end
+  end
+  def redirect_if_logged_in
+    if logged_in? 
+      redirect "/users/#{current_user.id}"
+    end
+  end
+end
 end
