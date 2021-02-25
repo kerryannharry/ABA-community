@@ -1,3 +1,4 @@
+class UsersController < ApplicationController
 get '/signup' do
     redirect_if_logged_in
     erb :"registrations/signup"
@@ -18,3 +19,4 @@ get '/signup' do
   get '/users/:id' do
 erb:"users/show"
   end
+end
