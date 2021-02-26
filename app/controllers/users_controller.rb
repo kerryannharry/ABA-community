@@ -17,6 +17,13 @@ get '/signup' do
   end 
 
   get '/users/:id' do
-erb:"users/show"
+    redirect_if_not_logged_in
+   user = User.find_by(id: params[:id])
+    if user == current_user
+        erb:"users/show"
+    else 
+        redirect "users/#{current_user.id}"
+    end
+        
   end
 end

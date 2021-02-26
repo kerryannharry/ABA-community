@@ -17,6 +17,7 @@ get '/login'do
   end
 
   get '/logout' do
+    redirect_if_not_logged_in
   session.clear
   redirect "/login"
   end
