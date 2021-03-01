@@ -8,3 +8,4 @@ run ApplicationController
 use SessionsController
 use UsersController
 use GroupsController
+use MethodOverride
