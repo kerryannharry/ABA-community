@@ -22,7 +22,7 @@ get '/signup' do
     if user == current_user
         erb:"users/show"
     else 
-        redirect "users/#{current_user.id}"
+        redirect "/users/#{current_user.id}"
     end
         
   end

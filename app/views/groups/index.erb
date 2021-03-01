@@ -1,0 +1,9 @@
+<h1> Groups! </h1>
+<ul> 
+<% @groups.each do |group| %>
+
+<li><a href= "/groups/<%=group.id%>"><%= group.title %></a>     <a class="btn btn-primary" href= "/groups/<%=group.id%>/join" ><%= group.join_group(current_user) %></a></li>
+
+<% end %>
+
+</ul>
