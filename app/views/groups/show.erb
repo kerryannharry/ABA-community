@@ -1,25 +1,29 @@
 <%if flash[:error]%> 
 <p> <%= flash[:error]%> </p>
 <% end %>
-
 <%if flash[:success]%> 
 <p> <%= flash[:success]%> </p>
 <% end %>
 <h1> <%=@group.title%> </h1>
+<br>
+<h4>Create a new comment</h4>
 <form method="POST" action= "/groups/<%=@group.id%>/posts">
     <p>Title: <input type="text" name="title" required></p>
     <p>Body: <input type="text" name="body" required></p>
     <input type="submit" value="Create">
-
-<form>
+</form>
+<hr><br>
+<h4>Comments</h4>
 <ul> 
 <% @group.posts.each do |post| %>
-
 <li>
 <h4><%= post.title %></h4>
 <p><%= post.body %></p>
+<a href = "/posts/<%=post.id%>/edit">Edit</a> 
+<form action="/posts/<%=post.id %>" method="post">
+    <input id="hidden" type="hidden" name="_method" value="delete">
+    <input type="submit" value="Delete">
+</form> 
 </li>
-
 <% end %>
-
 </ul>

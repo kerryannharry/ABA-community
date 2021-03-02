@@ -46,15 +46,21 @@ class GroupsController < ApplicationController
     end
 
     patch '/groups/:id' do 
-    redirect_if_not_logged_in
-    group = Group.find_by(id: params[:id])
-    post = Post.update(user: current_user, group: group, title: params[:title], body: params[:body])
+        redirect_if_not_logged_in
+        group = Group.find_by(id: params[:id])
+        post = Post.update(user: current_user, group: group, title: params[:title], body: params[:body])
+        if post.valid?
+            flash[:success]= "Your update has successfully posted!"
+        else 
+            flash[:error]= post.errors.full_messages.to_sentence
+        end
+        redirect "/groups/#{group.id}"
     end 
 
     delete '/groups/:id' do
         redirect_if_not_logged_in
-      session.clear
-      redirect "/groups/#{group.id}"
-      end
+        session.clear
+        redirect "/groups/#{group.id}"
+    end
 end 
 end
