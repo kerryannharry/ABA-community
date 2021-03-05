@@ -1,38 +1,42 @@
 class PostsController < ApplicationController
     get '/posts/:id/edit' do
         redirect_if_not_logged_in
-        @post = Post.find_by(params[:id])
+        @post = Post.find_by(id: params[:id])
         if @post.user == current_user
             erb :'posts/edit'
         else 
             redirect back
         end
     end
-
     patch '/posts/:id' do
         redirect_if_not_logged_in
-        post = Post.find_by(params[:id])
+        post = Post.find_by(id: params[:id])
         if post.user == current_user
             post.update(title: params[:title], body: params[:body])
-            flash[:success] = "post successfully updated!"
-            redirect "/groups/#{post.group_id}"
+            if post.valid?
+                flash[:success] = "post successfully updated!"
+                redirect "/groups/#{post.group_id}"
+            else
+                flash[:error] = post.errors.full_messages.to_sentence
+                redirect "/groups/#{post.id}/edit"
+            end
         else 
-            flash[:error] = post.errors.full_messages.to_sentence
-            redirect "/posts/#{post.id}/edit"
+            flash[:error] = "Unauthorized"
+            redirect "/groups/#{post.group_id}"
         end
     end
-
     delete '/posts/:id' do
         redirect_if_not_logged_in
-        post = Post.find_by(params[:id])
+        post = Post.find_by(id: params[:id])
         if post.user == current_user
-            post.destroy
-            flash[:success] = "post successfully deleted!"
+            if post.destroy
+                flash[:success] = "post successfully deleted!"
+                redirect "/groups/#{post.group_id}"
+            else 
+                flash[:error] = post.errors.full_messages.to_sentence
+            end
         else 
-            flash[:error] = post.errors.full_messages.to_sentence
+            redirect back
         end
-
-        redirect back
     end
-
 end 
