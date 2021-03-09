@@ -8,7 +8,7 @@ class GroupsController < ApplicationController
         redirect_if_not_logged_in
         group = Group.find_by(id: params[:id])
         if current_user.groups.include?(group)
-            GroupUser.find_by(user: current_user, group: group).destory
+            GroupUser.find_by(user: current_user, group: group).destroy
         else
             GroupUser.create(user: current_user, group: group)
         end
@@ -28,8 +28,7 @@ class GroupsController < ApplicationController
     end
     get '/groups/:id' do
         redirect_if_not_logged_in
-        @group = Group.find_by(id: params[:id])
-        if current_user.groups.include?(@group)
+        if @group = current_user.groups.find_by(id: params[:id])
             erb:"groups/show"
         else
             redirect "/users/#{current_user.id}"
@@ -39,7 +38,8 @@ class GroupsController < ApplicationController
     get '/groups/:id/edit'do
     redirect_if_not_logged_in
     @group = Group.find_by(id: params[:id])
-    if current_user.groups.include?(@group)
+    # if current_user.groups.include?(@group) 
+    if current_user.groups.find_by(id: params[:id])
         erb:"groups/edit"
     else
         redirect "/users/#{current_user.id}"
@@ -48,11 +48,11 @@ class GroupsController < ApplicationController
     patch '/groups/:id' do 
         redirect_if_not_logged_in
         group = Group.find_by(id: params[:id])
-        post = Post.update(user: current_user, group: group, title: params[:title], body: params[:body])
-        if post.valid?
-            flash[:success]= "Your update has successfully posted!"
+        # post = Post.update(user: current_user, group: group, title: params[:title], body: params[:body])
+        if group.valid?
+            flash[:success]= "Your Group has successfully updated!"
         else 
-            flash[:error]= post.errors.full_messages.to_sentence
+            flash[:error]= "Unauthorized"
         end
         redirect "/groups/#{group.id}"
     end 

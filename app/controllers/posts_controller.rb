@@ -1,8 +1,9 @@
 class PostsController < ApplicationController
     get '/posts/:id/edit' do
         redirect_if_not_logged_in
-        @post = Post.find_by(id: params[:id])
-        if @post.user == current_user
+        # @post = Post.find_by(id: params[:id])
+        # if @post.user == current_user
+        if @post = current_user.posts.find_by(id: params[:id])
             erb :'posts/edit'
         else 
             redirect back
